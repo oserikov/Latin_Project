@@ -229,8 +229,10 @@ res10, res11 = making_forms_1(res9)
 
 def making_forms_2_m(some_arr):
     musc_Sg = []
-    musc_Sg_end = ["us", "i", "o", "um", "o"]
-    exc = ["liber", "miser", "asper", "tener"]
+    musc_Sg_end = ["us", "i", "o", "um", "o"] #обычные
+    musc_Sg_end_ex = ["", "i", "o", "um", "o"]
+    musc_Sg_end_er = ["er", "ri", "ro", "rum", "ro"]  #для слов с -er
+    exc = ["liber", "miser", "asper", "tener"]  #искл. на -er
     for f_arr in some_arr:
         caus_musc_Sg = []
         forms = f_arr[0]
@@ -238,17 +240,21 @@ def making_forms_2_m(some_arr):
         musc_trans = (translation[:-2] + 'ый')
         f = (forms[1][:-1])
         pattern_er = (forms[0])
-        for caus_end in musc_Sg_end:
+        for caus_end in musc_Sg_end_ex:
             if pattern_er.endswith('er'):
                 if pattern_er in exc:
-                    caus_m = (f + caus_end)
-                else:
-                    string = pattern_er[::-1]
-                    f = (string.replace('re', 'r', 1))[::-1]
-                    caus_m = (f + caus_end)
-            else:
-                caus_m = (f + caus_end)
-            caus_musc_Sg.append(caus_m)
+                    caus_m = f + caus_end
+                    caus_musc_Sg.append(caus_m)
+        for er_ends in musc_Sg_end_er:
+            if pattern_er.endswith('er'):
+                if pattern_er not in exc:
+                    caus_m = f[:-1] + er_ends
+                    caus_musc_Sg.append(caus_m)
+        for caus_end in musc_Sg_end:
+            if not pattern_er.endswith('er'):
+                caus_m = f + caus_end
+                caus_musc_Sg.append(caus_m)
+
         musc_Sg.append([caus_musc_Sg, musc_trans])
 
     musc_Pl = []
@@ -275,7 +281,7 @@ def making_forms_2_m(some_arr):
     return musc_Sg, musc_Pl
 
 res12, res13 = making_forms_2_m(res9)
-#print("Парадигма склонения прил. м.р. ед.ч.:", res12, "\n\n\n", "Парадигма склонения прил. м.р. м.ч.:", res13, "\n\n")
+print("Парадигма склонения прил. м.р. ед.ч.:", res12, "\n\n\n", "Парадигма склонения прил. м.р. м.ч.:", res13, "\n\n")
 
 def making_forms_2_n(some_arr):
     neut_Sg = []
@@ -410,8 +416,13 @@ def making_forms_3_1(some_arr, gen_arr):   #делает фомрмы прил. 
     Dats = []
     Accs = []
     Abls = []
-
+    N_Pl_Nom_Acc = []
+    Pl_NOM = []
     for arr in f_m_causes_2:
+        Nom = (arr[0][0])
+        Pl_NOM.append(Nom)
+        N_Nom_Acc = (arr[0][:-2] + 'ia')
+        N_Pl_Nom_Acc.append(N_Nom_Acc)
         Nonf = (arr[0])
         Genf = (arr[1])
         Datf = (arr[2])
@@ -423,10 +434,9 @@ def making_forms_3_1(some_arr, gen_arr):   #делает фомрмы прил. 
         Accs.append(Accf)
         Abls.append(Ablf)
 
-    num_words = len(Noms)
-    no_form = list('-'*num_words)
+
     caus_m_f_Pl = [[[x, y, z, q, f], plt] for x, y, z, q, f, plt in zip(Noms, Genvs, Dats, Accs, Abls, Pl_trans)]
-    caus_neut_Pl = [[[x, y, z, q, f], tn] for x, y, z, q, f, tn in zip(no_form, no_form, no_form, no_form, Abls, Pl_trans)]
+    caus_neut_Pl = [[[x, y, z, q, f], tn] for x, y, z, q, f, tn in zip(N_Pl_Nom_Acc, Genvs, Dats, N_Pl_Nom_Acc, Abls, Pl_trans)]
 
     return caus_m_f_Sg, caus_neut_Sg, caus_m_f_Pl, caus_neut_Pl
 
@@ -675,6 +685,111 @@ def craft_diction_forms(dec1_Sg, dec1_Pl, dec2_m_Sg, dec2_m_Pl, dec2_n_Sg, dec2_
             print()
 
 
+    for idx in range(len(dec3_1end_mf_Sg)):     # dec3_1end
+
+        cases = ["Nom", "Gen", "Dat", "Acc", "Abl"]
+
+        nom_m = dec3_1end_mf_Sg[idx][0]
+        if user_word in nom_m:
+            num_word = idx
+            print(dec3_1end_mf_Sg[idx][1])
+            print("падеж\tm\tf\tn")
+
+            for case_idx, case in enumerate(cases):
+                search_fm_sg = dec3_1end_mf_Sg[num_word]
+                search_n_sg = dec3_1end_n_Sg[num_word]
+                print('\t'.join([case,
+                                 search_fm_sg[0][case_idx],
+                                 search_fm_sg[0][case_idx],
+                                 search_n_sg[0][case_idx]]))
+            print()
+            print()
+            print()
+
+            print(dec3_1end_mf_Pl[idx][1])
+            print("падеж\tm\tf\tn")
+            for case_idx, case in enumerate(cases):
+                search_fm_pl = dec3_1end_mf_Pl[num_word]
+                search_n_pl = dec3_1end_n_Pl[num_word]
+                print('\t'.join([case,
+                                 search_fm_pl[0][case_idx],
+                                 search_fm_pl[0][case_idx],
+                                 search_n_pl[0][case_idx]]))
+
+            print()
+            print()
+            print()
+
+    for idx in range(len(dec3_2ends_mf_Sg)):  # dec3_2ends
+
+        cases = ["Nom", "Gen", "Dat", "Acc", "Abl"]
+
+        nom_m = dec3_2ends_mf_Sg[idx][0]
+        if user_word in nom_m:
+            num_word = idx
+            print(dec3_2ends_mf_Sg[idx][1])
+            print("падеж\tm\tf\tn")
+
+            for case_idx, case in enumerate(cases):
+                search_fm_sg = dec3_2ends_mf_Sg[num_word]
+                search_n_sg = dec3_2ends_n_Sg[num_word]
+                print('\t'.join([case,
+                                 search_fm_sg[0][case_idx],
+                                 search_fm_sg[0][case_idx],
+                                 search_n_sg[0][case_idx]]))
+            print()
+            print()
+            print()
+
+            print(dec3_2ends_mf_Pl[idx][1])
+            print("падеж\tm\tf\tn")
+            for case_idx, case in enumerate(cases):
+                search_fm_pl = dec3_2ends_mf_Pl[num_word]
+                search_n_pl = dec3_2ends_n_Pl[num_word]
+                print('\t'.join([case,
+                                 search_fm_pl[0][case_idx],
+                                 search_fm_pl[0][case_idx],
+                                 search_n_pl[0][case_idx]]))
+
+            print()
+            print()
+            print()
+
+    for idx in range(len(dec3_3ends_m_Sg)):  # dec3_3ends
+
+        cases = ["Nom", "Gen", "Dat", "Acc", "Abl"]
+
+        nom_m = dec3_3ends_m_Sg[idx][0]
+        if user_word in nom_m:
+            num_word = idx
+            print(dec3_3ends_m_Sg[idx][1])
+            print("падеж\tm\tf\tn")
+
+            for case_idx, case in enumerate(cases):
+                search_f_sg = dec3_3ends_f_Sg[num_word]
+                search_m_sg = dec3_3ends_m_Sg[num_word]
+                search_n_sg = dec3_3ends_n_Sg[num_word]
+                print('\t'.join([case,
+                                 search_f_sg[0][case_idx],
+                                 search_m_sg[0][case_idx],
+                                 search_n_sg[0][case_idx]]))
+            print()
+            print()
+            print()
+
+            print(dec2_m_Pl[idx][1])
+            print("падеж\tm\tf\tn")
+            for case_idx, case in enumerate(cases):
+                search_fm_pl = dec3_3ends_mf_Pl[num_word]
+                search_n_pl = dec3_3ends_n_Pl[num_word]
+                print('\t'.join([case,
+                                 search_fm_pl[0][case_idx],
+                                 search_fm_pl[0][case_idx],
+                                 search_n_pl[0][case_idx]]))
+
+            print()
+            print()
+            print()
     return 1
 
 res34 = craft_diction_forms(res10, res11, res12, res13, res14, res15, res16, res21, res22, res23, res25, res26, res27,
