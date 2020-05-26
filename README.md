@@ -31,13 +31,6 @@
 
 
 
->>> start_path = '.'
->>> for root, dirs, files in os.walk(start_path):
-...     print('Где мы сейчас:', root)
-...     print('Папки на этом уровне:', dirs)
-...     print('Файлы на этом уровне:', files)
-
-
 
 
 
